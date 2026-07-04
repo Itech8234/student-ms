@@ -1,5 +1,5 @@
 import { db } from "./firebase-admin.js";
-
+export { db };
 export const COL = {
   USERS:       "users",
   COURSES:     "courses",
