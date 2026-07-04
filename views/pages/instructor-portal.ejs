@@ -1,0 +1,40 @@
+<section class="mx-auto max-w-7xl px-4 py-10">
+  <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-3xl font-bold">Instructor Portal</h1>
+      <p class="text-slate-600 mt-1">Manage your courses and students.</p>
+    </div>
+    <a href="/instructor/courses/new"
+       class="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-600 text-white rounded-lg hover:bg-brand-700 focus:ring-2 focus:ring-brand-500">
+      <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"/></svg>
+      New course
+    </a>
+  </header>
+
+  <div class="grid lg:grid-cols-[1fr_22rem] gap-6">
+    <div class="bg-white rounded-xl shadow">
+      <div class="p-5 border-b border-slate-200 flex items-center justify-between">
+        <h2 class="font-semibold">My courses</h2>
+        <div class="flex gap-2" role="tablist" aria-label="Course status filter">
+          <button hx-get="/instructor/courses?status=all"        hx-target="#courses-list" hx-swap="innerHTML" class="px-3 py-1 text-sm rounded-md bg-slate-100">All</button>
+          <button hx-get="/instructor/courses?status=draft"      hx-target="#courses-list" hx-swap="innerHTML" class="px-3 py-1 text-sm rounded-md hover:bg-slate-100">Drafts</button>
+          <button hx-get="/instructor/courses?status=published"  hx-target="#courses-list" hx-swap="innerHTML" class="px-3 py-1 text-sm rounded-md hover:bg-slate-100">Published</button>
+        </div>
+      </div>
+
+      <div id="courses-list"
+           hx-get="/instructor/courses" hx-trigger="load" hx-swap="innerHTML"
+           class="divide-y divide-slate-100">
+        <div class="htmx-indicator p-8 text-center text-slate-500">Loading…</div>
+      </div>
+    </div>
+
+    <aside class="bg-white rounded-xl shadow p-5">
+      <h2 class="font-semibold mb-3">Student activity</h2>
+      <div hx-get="/instructor/roster" hx-trigger="load, every 30s" hx-swap="innerHTML"
+           class="space-y-3 text-sm">
+        <div class="htmx-indicator text-slate-500">Loading…</div>
+      </div>
+    </aside>
+  </div>
+</section>

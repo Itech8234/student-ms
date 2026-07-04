@@ -1,0 +1,38 @@
+<section class="border border-slate-200 rounded-lg" id="module-<%= module.id %>">
+  <header class="flex items-center justify-between p-3 bg-slate-50 rounded-t-lg">
+    <div class="flex items-center gap-2">
+      <span class="text-xs text-slate-500">Module <%= module.order %></span>
+      <span class="font-medium text-slate-800"><%= module.title %></span>
+      <span class="text-xs text-slate-500">· <%= module.lessons.length %> lessons</span>
+    </div>
+    <button type="button"
+            hx-delete="/instructor/courses/<%= courseId %>/modules/<%= module.id %>"
+            hx-target="#module-<%= module.id %>"
+            hx-swap="outerHTML swap:300ms"
+            hx-confirm="Delete this module and all its lessons?"
+            class="text-xs text-rose-600 hover:text-rose-700">Delete</button>
+  </header>
+
+  <ul id="lessons-<%= module.id %>" class="divide-y divide-slate-100">
+    <% module.lessons.forEach(l => { %>
+      <%- include('./lesson-row', { lesson: l, courseId, moduleId: module.id, layout: false }) %>
+    <% }) %>
+  </ul>
+
+  <form
+    hx-post="/instructor/courses/<%= courseId %>/modules/<%= module.id %>/lessons"
+    hx-target="#lessons-<%= module.id %>"
+    hx-swap="beforeend"
+    hx-on::after-request="this.reset()"
+    class="p-3 border-t border-slate-100 grid sm:grid-cols-[1fr_6rem_8rem_auto] gap-2">
+    <input name="title" required placeholder="Lesson title" class="rounded border-slate-300 text-sm" />
+    <input name="order" type="number" placeholder="#" value="<%= module.lessons.length + 1 %>" class="rounded border-slate-300 text-sm" />
+    <select name="type" class="rounded border-slate-300 text-sm">
+      <option value="text">Text</option>
+      <option value="video">Video</option>
+      <option value="quiz">Quiz</option>
+    </select>
+    <button type="submit" class="px-3 py-1.5 bg-brand-600 text-white text-sm rounded-lg hover:bg-brand-700">+ Add</button>
+    <textarea name="body" placeholder="Lesson body (markdown/html for text lessons)" class="sm:col-span-4 rounded border-slate-300 text-sm" rows="2"></textarea>
+  </form>
+</section>

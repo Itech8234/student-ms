@@ -1,0 +1,30 @@
+<% if (!courses.length) { %>
+  <p class="col-span-full text-center py-12 text-slate-500">No courses match your filters.</p>
+<% } %>
+
+<% courses.forEach(course => { %>
+  <article class="group bg-white rounded-[var(--radius-card)] shadow-[var(--shadow-card)] overflow-hidden hover:-translate-y-0.5 transition-transform">
+    <a href="/courses/<%= course.slug %>" class="block focus:outline-none">
+      <div class="aspect-video bg-slate-100 overflow-hidden">
+        <% if (course.thumbnail) { %>
+          <img src="<%= course.thumbnail %>" alt="" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        <% } else { %>
+          <div class="w-full h-full flex items-center justify-center text-slate-400 text-sm">No thumbnail</div>
+        <% } %>
+      </div>
+      <div class="p-4">
+        <span class="inline-block text-xs font-medium px-2 py-0.5 rounded-full bg-brand-50 text-brand-700"><%= course.category %></span>
+        <h3 class="mt-2 font-semibold text-slate-900 line-clamp-2 group-hover:text-brand-600"><%= course.title %></h3>
+        <p class="mt-1 text-sm text-slate-500">By <%= course.instructorName %></p>
+        <div class="mt-3 flex items-center justify-between text-sm">
+          <span class="text-slate-700 font-medium">
+            <%= course.price === 0 ? "Free" : "$" + course.price %>
+          </span>
+          <span class="text-slate-500" aria-label="<%= course.enrolledCount %> students enrolled">
+            👥 <%= course.enrolledCount || 0 %>
+          </span>
+        </div>
+      </div>
+    </a>
+  </article>
+<% }) %>

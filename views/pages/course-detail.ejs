@@ -1,0 +1,63 @@
+<section class="bg-gradient-to-br from-slate-900 to-brand-700 text-white">
+  <div class="mx-auto max-w-7xl px-4 py-12 grid lg:grid-cols-3 gap-8">
+    <div class="lg:col-span-2">
+      <a href="/courses" class="text-sm text-brand-100 hover:text-white">← All courses</a>
+      <h1 class="mt-2 text-3xl md:text-4xl font-bold"><%= course.title %></h1>
+      <p class="mt-3 text-brand-50 max-w-2xl"><%= course.description %></p>
+      <p class="mt-4 text-sm">By <strong><%= course.instructorName %></strong></p>
+    </div>
+
+    <aside class="bg-white text-slate-900 rounded-xl p-6 shadow-xl">
+      <div class="aspect-video rounded-lg overflow-hidden bg-slate-100 mb-4">
+        <% if (course.thumbnail) { %>
+          <img src="<%= course.thumbnail %>" alt="" class="w-full h-full object-cover" />
+        <% } %>
+      </div>
+      <div class="text-3xl font-bold mb-4"><%= course.price === 0 ? "Free" : "$" + course.price %></div>
+      <div id="enroll-zone">
+        <% if (isEnrolled) { %>
+          <a href="/learn/<%= course.id %>"
+             class="block w-full text-center bg-emerald-600 text-white py-3 rounded-lg font-medium hover:bg-emerald-700">
+            Continue learning →
+          </a>
+        <% } else { %>
+          <button data-action="enroll" data-course-id="<%= course.id %>"
+                  class="block w-full bg-brand-600 text-white py-3 rounded-lg font-medium hover:bg-brand-700 focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
+            Enroll now
+          </button>
+        <% } %>
+      </div>
+      <ul class="mt-6 space-y-2 text-sm text-slate-600">
+        <li>📚 <%= course.lessonsCount %> lessons</li>
+        <li>📦 <%= course.modulesCount %> modules</li>
+        <li>👥 <%= course.enrolledCount %> students</li>
+        <li>⭐ <%= course.ratingAvg?.toFixed(1) || "—" %> (<%= course.ratingCount %> reviews)</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<section class="mx-auto max-w-7xl px-4 py-10">
+  <h2 class="text-2xl font-bold mb-6">Curriculum</h2>
+  <div class="space-y-3">
+    <% course.modules.forEach((m, mi) => { %>
+      <details class="group bg-white rounded-lg shadow">
+        <summary class="cursor-pointer p-4 flex items-center justify-between font-medium">
+          <span>Module <%= mi + 1 %>: <%= m.title %></span>
+          <span class="text-sm text-slate-500"><%= m.lessons.length %> lessons</span>
+        </summary>
+        <ul class="border-t border-slate-200 divide-y divide-slate-100">
+          <% m.lessons.forEach(l => { %>
+            <li class="p-3 pl-8 text-sm text-slate-700 flex items-center justify-between">
+              <span><%= l.title %></span>
+              <span class="text-xs text-slate-500">
+                <% if (l.isFree) { %><span class="text-emerald-600">Free preview</span><% } %>
+                <% if (l.type === "video") { %>· <%= Math.round((l.content?.durationSec || 0) / 60) %> min<% } %>
+              </span>
+            </li>
+          <% }) %>
+        </ul>
+      </details>
+    <% }) %>
+  </div>
+</section>

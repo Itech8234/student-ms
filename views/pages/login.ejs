@@ -1,0 +1,31 @@
+<section class="mx-auto max-w-md px-4 py-16">
+  <div class="bg-white rounded-xl shadow p-8">
+    <h1 class="text-2xl font-bold text-slate-900">Sign in</h1>
+    <p class="mt-1 text-sm text-slate-500">Welcome back. Continue your learning journey.</p>
+
+    <form id="login-form" class="mt-6 space-y-4" novalidate>
+      <div>
+        <label for="email" class="block text-sm font-medium text-slate-700">Email</label>
+        <input id="email" name="email" type="email" required autocomplete="email"
+               class="mt-1 w-full rounded-lg border-slate-300 focus:border-brand-500 focus:ring-brand-500" />
+      </div>
+      <div>
+        <label for="password" class="block text-sm font-medium text-slate-700">Password</label>
+        <input id="password" name="password" type="password" required autocomplete="current-password"
+               class="mt-1 w-full rounded-lg border-slate-300 focus:border-brand-500 focus:ring-brand-500" />
+      </div>
+
+      <button type="submit"
+              class="w-full bg-brand-600 text-white font-medium py-2.5 rounded-lg hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2">
+        Sign in
+      </button>
+
+      <p class="text-sm text-slate-600 text-center">
+        New here? <a href="/register" class="text-brand-600 hover:underline">Create an account</a><br />
+        <a href="/reset" class="text-brand-600 hover:underline">Forgot password?</a>
+      </p>
+
+      <div id="login-error" role="alert" class="hidden text-sm text-red-600"></div>
+    </form>
+  </div>
+</section>

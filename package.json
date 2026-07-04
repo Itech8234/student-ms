@@ -1,0 +1,24 @@
+{
+  "name": "student-lms",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Student E-Learning Management System — HTMX + Express + Firebase",
+  "main": "server.js",
+  "scripts": {
+    "dev":   "node --watch server.js",
+    "start": "node server.js",
+    "bootstrap:instructor": "node scripts/create-instructor.js"
+  },
+  "dependencies": {
+    "compression":     "^1.7.4",
+    "cookie-parser":   "^1.4.6",
+    "ejs":             "^3.1.10",
+    "express":         "^4.19.2",
+    "express-ejs-layouts": "^2.5.1",
+    "firebase-admin":  "^12.3.0",
+    "helmet":          "^7.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

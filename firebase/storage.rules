@@ -1,0 +1,21 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isInstructor() {
+      return request.auth != null && request.auth.token.role == 'instructor';
+    }
+
+    match /courses/{courseId}/thumbnails/{file} {
+      allow read: if true;
+      allow write: if isInstructor()
+                    && request.resource.size < 2 * 1024 * 1024;
+    }
+
+    match /courses/{courseId}/lessons/{lessonId}/{file} {
+      allow read: if false;
+      allow write: if isInstructor()
+                    && request.resource.size < 500 * 1024 * 1024;
+    }
+  }
+}

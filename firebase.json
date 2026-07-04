@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [{ "source": "**", "run": { "serviceId": "learnhub", "region": "europe-west1" } }],
+    "headers": [
+      { "source": "/static/**", "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800, immutable" }] }
+    ]
+  },
+  "firestore": {
+    "rules":   "firebase/firestore.rules",
+    "indexes": "firebase/firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "firebase/storage.rules"
+  }
+}

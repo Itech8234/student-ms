@@ -1,0 +1,33 @@
+<% const cid = course.id; %>
+
+<section class="mx-auto max-w-4xl px-4 py-10">
+  <a href="/instructor" class="text-sm text-slate-500 hover:text-brand-600">← Portal</a>
+  <h1 class="text-2xl font-bold mt-1"><%= course.title %></h1>
+  <p class="text-sm text-slate-500 mb-6">Status: <%= course.status %></p>
+
+  <div class="bg-white rounded-xl shadow p-6 space-y-4">
+    <div class="flex items-center justify-between">
+      <h2 class="font-semibold">Modules</h2>
+      <form hx-post="/instructor/courses/<%= cid %>/modules"
+            hx-target="#modules-list" hx-swap="afterbegin"
+            hx-on::after-request="this.reset()"
+            class="flex gap-2">
+        <input name="title" required placeholder="Module title" class="rounded-lg border-slate-300 text-sm" />
+        <input name="order" type="number" placeholder="Order" value="1" class="w-20 rounded-lg border-slate-300 text-sm" />
+        <button type="submit" class="px-3 py-1.5 bg-brand-600 text-white text-sm rounded-lg hover:bg-brand-700">+ Add module</button>
+      </form>
+    </div>
+
+    <div id="modules-list" class="space-y-4">
+      <% modules.forEach(m => { %>
+        <%- include('../partials/module-row', { module: m, courseId: cid, layout: false }) %>
+      <% }) %>
+    </div>
+  </div>
+
+  <div class="mt-6 flex justify-end gap-3">
+    <form hx-post="/instructor/courses/<%= cid %>/publish" hx-swap="none">
+      <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700">Publish course</button>
+    </form>
+  </div>
+</section>

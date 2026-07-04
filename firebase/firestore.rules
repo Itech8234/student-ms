@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function uid() { return request.auth.uid; }
+    function role() { return request.auth.token.role; }
+    function isStudent()    { return isSignedIn() && role() == 'student'; }
+    function isInstructor() { return isSignedIn() && role() == 'instructor'; }
+    function isOwner(ownerId) { return isSignedIn() && uid() == ownerId; }
+    function enrollmentDoc(eid) { return get(/databases/$(database)/documents/enrollments/$(eid)); }
+
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isOwner(userId)
+                    && request.resource.data.role == 'student'
+                    && request.resource.data.email is string;
+      allow update: if isOwner(userId)
+                    && request.resource.data.role == resource.data.role;
+      allow delete: if false;
+    }
+
+    match /courses/{courseId} {
+      allow read: if resource.data.status == 'published'
+                  || (isSignedIn() && resource.data.instructorId == uid());
+      allow create: if isInstructor()
+                    && request.resource.data.instructorId == uid()
+                    && request.resource.data.status in ['draft', 'published']
+                    && request.resource.data.title is string
+                    && request.resource.data.title.size() > 0;
+      allow update: if isInstructor()
+                    && resource.data.instructorId == uid()
+                    && request.resource.data.instructorId == resource.data.instructorId;
+      allow delete: if isInstructor() && resource.data.instructorId == uid();
+
+      match /modules/{moduleId} {
+        allow read: if true;
+        allow write: if isInstructor()
+                      && get(/databases/$(database)/documents/courses/$(courseId)).data.instructorId == uid();
+      }
+
+      match /modules/{moduleId}/lessons/{lessonId} {
+        allow read: if resource.data.isFree == true
+                    || (isSignedIn()
+                        && exists(/databases/$(database)/documents/enrollments/$(uid() + '_' + courseId)));
+        allow write: if isInstructor()
+                      && get(/databases/$(database)/documents/courses/$(courseId)).data.instructorId == uid();
+      }
+
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow create: if isStudent()
+                      && request.resource.data.userId == uid()
+                      && request.resource.data.rating in [1,2,3,4,5]
+                      && exists(/databases/$(database)/documents/enrollments/$(uid() + '_' + courseId));
+        allow update, delete: if isOwner(resource.data.userId);
+      }
+    }
+
+    match /enrollments/{enrollmentId} {
+      allow read: if isSignedIn()
+                  && (resource.data.userId == uid() || isInstructor());
+      allow create, update, delete: if false;
+
+      match /lessons/{lessonId} {
+        allow read: if isSignedIn()
+                    && enrollmentDoc(enrollmentId).data.userId == uid();
+        allow write: if false;
+      }
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

@@ -1,0 +1,14 @@
+<li id="lesson-<%= lesson.id %>" class="p-3 flex items-center justify-between text-sm">
+  <div class="flex items-center gap-2">
+    <span class="text-xs text-slate-500 tabular-nums w-6 text-right"><%= lesson.order %></span>
+    <span class="text-slate-800"><%= lesson.title %></span>
+    <span class="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600"><%= lesson.type %></span>
+    <% if (lesson.isFree) { %><span class="text-xs text-emerald-600">Free</span><% } %>
+  </div>
+  <button type="button"
+          hx-delete="/instructor/courses/<%= courseId %>/modules/<%= moduleId %>/lessons/<%= lesson.id %>"
+          hx-target="#lesson-<%= lesson.id %>"
+          hx-swap="outerHTML swap:200ms"
+          hx-confirm="Delete this lesson?"
+          class="text-xs text-rose-600 hover:text-rose-700">Delete</button>
+</li>

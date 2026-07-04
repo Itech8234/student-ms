@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= title || "LearnHub" %> · LearnHub LMS</title>
+  <meta name="description" content="Student E-Learning Management System" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:  '#eef4ff',
+              100: '#dbe6ff',
+              500: '#3b6ef5',
+              600: '#2d57d4',
+              700: '#2347b0'
+            }
+          },
+          fontFamily: { sans: ['"Inter"', 'system-ui', 'sans-serif'] }
+        }
+      }
+    };
+  </script>
+
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+  <script type="module" src="/static/js/firebase-config.js"></script>
+  <script type="module" src="/static/js/auth-client.js"></script>
+
+  <link rel="stylesheet" href="/static/css/app.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="h-full bg-slate-50 text-slate-900 font-sans antialiased">
+
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:bg-brand-600 focus:text-white focus:px-3 focus:py-2 focus:rounded">
+    Skip to main content
+  </a>
+
+  <%- include('../partials/navbar') %>
+
+  <main id="main" class="min-h-[calc(100vh-4rem)]">
+    <%- body %>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <div id="toast-region" class="fixed top-4 right-4 z-50 flex flex-col gap-2" aria-live="polite" aria-atomic="true"></div>
+
+  <script type="module" src="/static/js/htmx-extensions.js"></script>
+  <script type="module" src="/static/js/app.js"></script>
+</body>
+</html>

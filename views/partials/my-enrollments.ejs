@@ -1,0 +1,23 @@
+<% if (!items.length) { %>
+  <p class="text-sm text-slate-500">You haven't enrolled in any courses yet. <a href="/courses" class="text-brand-600 hover:underline">Browse the catalog</a>.</p>
+<% } %>
+
+<% items.forEach(e => { %>
+  <a href="/learn/<%= e.courseId %><%= e.lastLessonId ? '?lesson=' + e.lastLessonId : '' %>"
+     class="flex items-center gap-4 p-3 rounded-lg border border-slate-200 hover:border-brand-300 hover:bg-brand-50/30 transition"
+     hx-boost="true">
+    <div class="w-16 h-16 rounded-md bg-slate-100 flex-shrink-0 overflow-hidden">
+      <% if (e.courseThumbnail) { %>
+        <img src="<%= e.courseThumbnail %>" alt="" class="w-full h-full object-cover" />
+      <% } %>
+    </div>
+    <div class="flex-1 min-w-0">
+      <h3 class="font-medium text-slate-900 truncate"><%= e.courseTitle %></h3>
+      <p class="text-xs text-slate-500">Last accessed <%= new Date(e.lastAccessedAt?.toDate?.() || e.lastAccessedAt).toLocaleDateString() %></p>
+      <div class="mt-1.5 flex items-center gap-2">
+        <progress class="w-full h-1.5" value="<%= e.progressPct || 0 %>" max="100" aria-label="Course progress"></progress>
+        <span class="text-xs text-slate-600 tabular-nums w-9 text-right"><%= e.progressPct || 0 %>%</span>
+      </div>
+    </div>
+  </a>
+<% }) %>

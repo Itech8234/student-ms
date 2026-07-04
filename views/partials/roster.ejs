@@ -1,0 +1,20 @@
+<% if (!items.length) { %>
+  <p class="text-slate-500">No enrollments yet.</p>
+<% } %>
+
+<% items.slice(0, 8).forEach(e => { %>
+  <div class="flex items-center gap-3">
+    <div class="w-8 h-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-xs font-semibold">
+      <%= (e.courseTitle || "?").charAt(0) %>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p class="truncate text-slate-800"><%= e.courseTitle %></p>
+      <p class="text-xs text-slate-500">Progress: <%= e.progressPct %>%</p>
+    </div>
+    <progress class="w-12 h-1" value="<%= e.progressPct || 0 %>" max="100" aria-hidden="true"></progress>
+  </div>
+<% }) %>
+
+<% if (items.length > 8) { %>
+  <a href="/instructor/roster" class="block text-center text-sm text-brand-600 mt-2">View all <%= items.length %> →</a>
+<% } %>

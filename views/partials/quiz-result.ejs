@@ -1,0 +1,7 @@
+<div class="rounded-lg p-4 <%= passed ? 'bg-emerald-50 text-emerald-800' : 'bg-rose-50 text-rose-800' %>">
+  <% if (passed) { %>
+    🎉 You scored <strong><%= correct %>/<%= total %></strong> — lesson marked complete!
+  <% } else { %>
+    You scored <strong><%= correct %>/<%= total %></strong>. You need 70% to pass. Try again.
+  <% } %>
+</div>

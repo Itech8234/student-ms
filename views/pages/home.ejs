@@ -1,0 +1,16 @@
+<section class="bg-gradient-to-b from-brand-50 to-transparent">
+  <div class="mx-auto max-w-7xl px-4 py-16 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold text-slate-900">Learn anything. Track everything.</h1>
+    <p class="mt-3 text-slate-600 max-w-xl mx-auto">Expert-led courses with progress that follows you across devices.</p>
+    <a href="/courses" class="mt-6 inline-block px-6 py-3 bg-brand-600 text-white rounded-lg hover:bg-brand-700">Browse courses</a>
+  </div>
+</section>
+
+<section class="mx-auto max-w-7xl px-4 py-10">
+  <h2 class="text-2xl font-bold mb-6">Featured courses</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% featured.forEach(course => { %>
+      <%- include('../partials/course-card', { course, layout: false }) %>
+    <% }) %>
+  </div>
+</section>

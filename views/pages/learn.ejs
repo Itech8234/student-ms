@@ -1,0 +1,71 @@
+<%
+  const course    = data.course;
+  const lessonId  = data.lessonId;
+  const completed = new Set(data.completedSet || []);
+  const allFlat   = course.modules.flatMap(m => m.lessons.map(l => ({ ...l, moduleId: m.id })));
+  const current   = allFlat.find(l => l.id === lessonId) || allFlat[0];
+%>
+
+<div class="flex h-[calc(100vh-4rem)] bg-slate-50">
+
+  <aside class="hidden lg:flex w-80 flex-col border-r border-slate-200 bg-white" aria-label="Course content">
+    <div class="p-5 border-b border-slate-200">
+      <a href="/courses/<%= course.slug %>" class="text-xs text-slate-500 hover:text-brand-600">← Back to course</a>
+      <h2 class="mt-1 font-semibold text-slate-900 line-clamp-2"><%= course.title %></h2>
+      <div class="mt-3">
+        <div class="flex items-center justify-between text-xs text-slate-500 mb-1">
+          <span>Your progress</span>
+          <span data-progress-label><%= data.overallPct %>%</span>
+        </div>
+        <progress data-progress-bar id="course-progress"
+                  class="w-full h-1.5" value="<%= data.overallPct %>" max="100"
+                  aria-label="Overall course progress"></progress>
+      </div>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto p-3 space-y-4" role="navigation">
+      <% course.modules.forEach((m, mi) => { %>
+        <section aria-labelledby="mod-<%= m.id %>">
+          <h3 id="mod-<%= m.id %>" class="text-xs font-semibold uppercase tracking-wide text-slate-500 px-2 mb-1">
+            Module <%= mi + 1 %> · <%= m.title %>
+          </h3>
+          <ul class="space-y-0.5">
+            <% m.lessons.forEach(l => {
+                 const isActive = l.id === current?.id;
+                 const isDone   = completed.has(l.id);
+            %>
+              <li>
+                <a href="?lesson=<%= l.id %>"
+                   hx-get="/lessons/<%= course.id %>/<%= l.id %>"
+                   hx-target="#lesson-stage" hx-swap="innerHTML" hx-push-url="true"
+                   class="group flex items-start gap-2 rounded-md px-2 py-2 text-sm
+                          <%= isActive ? 'bg-brand-50 text-brand-700 font-medium' : 'text-slate-700 hover:bg-slate-100' %>"
+                   aria-current="<%= isActive ? 'page' : 'false' %>">
+                  <span class="mt-0.5 flex-shrink-0 w-5 h-5 rounded-full border flex items-center justify-center
+                               <%= isDone ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 text-slate-400' %>"
+                        aria-hidden="true">
+                    <% if (isDone) { %>✓<% } else { %><%= l.order %><% } %>
+                  </span>
+                  <span class="flex-1 min-w-0">
+                    <span class="block truncate"><%= l.title %></span>
+                    <span class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                      <% if (l.type === "video") { %>▶ <%= Math.round((l.content?.durationSec || 0) / 60) %> min<% } %>
+                      <% if (l.type === "text")  { %>📄 Reading<% } %>
+                      <% if (l.type === "quiz")  { %>✏️ Quiz<% } %>
+                    </span>
+                  </span>
+                </a>
+              </li>
+            <% }) %>
+          </ul>
+        </section>
+      <% }) %>
+    </nav>
+  </aside>
+
+  <section id="lesson-stage" class="flex-1 overflow-y-auto" aria-live="polite">
+    <%- include('../partials/lesson-view', {
+         lesson: current, courseId: course.id, completedSet: [...completed], layout: false
+    }) %>
+  </section>
+</div>
