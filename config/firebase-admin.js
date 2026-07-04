@@ -2,12 +2,23 @@ import admin from "firebase-admin";
 import { readFileSync, existsSync } from "node:fs";
 
 let credential;
-const saPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
-if (saPath && existsSync(saPath)) {
-  const sa = JSON.parse(readFileSync(saPath, "utf8"));
-  credential = admin.credential.cert(sa);
+
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
+  credential = admin.credential.cert(serviceAccount);
+
+} else if (
+  process.env.FIREBASE_SERVICE_ACCOUNT_PATH &&
+  existsSync(process.env.FIREBASE_SERVICE_ACCOUNT_PATH)
+) {
+  const serviceAccount = JSON.parse(
+    readFileSync(process.env.FIREBASE_SERVICE_ACCOUNT_PATH, "utf8")
+  );
+
+  credential = admin.credential.cert(serviceAccount);
+
 } else {
-  // Fallback: Application Default Credentials (works on GCP / Cloud Run)
   credential = admin.credential.applicationDefault();
 }
 
@@ -18,10 +29,12 @@ if (!admin.apps.length) {
   });
 }
 
-export const db      = admin.firestore();
-export const auth    = admin.auth();
+export const db = admin.firestore();
+export const auth = admin.auth();
 export const storage = admin.storage();
-export default admin;
 
-// Stable ordering & ignore undefined props
-db.settings({ ignoreUndefinedProperties: true });
+db.settings({
+  ignoreUndefinedProperties: true
+});
+
+export default admin;
